@@ -1,9 +1,10 @@
 import json
 import logging
 import os
-
+import pandas as pd
 import requests
 from dotenv import load_dotenv
+from typing import Any
 
 logger = logging.getLogger(__name__)
 file_handler = logging.FileHandler('logs/utils.log', mode='w')
@@ -28,6 +29,51 @@ def reading_json_file(path: str) -> list[dict]:
     except FileNotFoundError:
         logger.warning('Возможна проблема с путем до JSON-файла')
         return []
+
+
+def reading_xlsx(path:str) -> pd.DataFrame:
+    """Функция, которая принимает на вход путь до XLSX-файла
+        и возвращает датафрейм по операциям."""
+    try:
+        fieldnames = {'Дата операции': str, 'Номер карты': str,
+                      'Статус': str, 'Сумма операции': float, 'Валюта операции': str,
+                      'Сумма платежа': float, 'Валюта платежа': str,
+                      'Категория': str, 'Описание': str}
+        df = pd.read_excel(path, decimal=';', dtype=fieldnames)[['Дата операции',
+                 'Номер карты', 'Статус', 'Сумма операции', 'Валюта операции',
+                 'Сумма платежа','Валюта платежа', 'Категория', 'Описание']]
+        df['Дата операции'] = pd.to_datetime(df['Дата операции'], dayfirst=True)
+        return df
+    except FileNotFoundError:
+        return pd.DataFrame()
+
+
+def df_to_transactions(path:str) -> list[dict[str, Any]]:
+    df = reading_xlsx(path)
+    df_expanse = df[(df['Статус'] == 'OK') \
+                    & (df['Сумма платежа'] <= 0) \
+                    & (df['Валюта операции'] != 'RUB') \
+                    & (df['Валюта платежа'] == 'RUB')]. \
+        groupby(['Дата операции'], as_index=False). \
+        agg({'Сумма платежа': 'sum'}). \
+        rename(columns={'Сумма платежа': 'Сумма операции'})
+    df_operation = df[(df['Статус'] == 'OK') \
+                      & (df['Сумма операции'] <= 0) \
+                      & (df['Валюта платежа'] != 'RUB') \
+                      & (df['Валюта операции'] == 'RUB')]. \
+        groupby(['Дата операции'], as_index=False). \
+        agg({'Сумма операции': 'sum'})
+    df_operation_2 = df[(df['Статус'] == 'OK') \
+                        & (df['Сумма операции'] <= 0) \
+                        & (df['Валюта платежа'] == 'RUB') \
+                        & (df['Валюта операции'] == 'RUB')]. \
+        groupby(['Дата операции'], as_index=False). \
+        agg({'Сумма операции': 'sum'})
+
+    df = pd.concat([df_expanse, df_operation, df_operation_2])
+    df = df.groupby(['Дата операции'], as_index=False).agg({'Сумма операции': 'sum'})
+    transactions = df.to_dict('records')
+    return transactions
 
 
 def external_api_marketstack() -> list[dict]:
