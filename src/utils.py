@@ -48,8 +48,9 @@ def reading_xlsx(path:str) -> pd.DataFrame:
         return pd.DataFrame()
 
 
-def df_to_transactions(path:str) -> list[dict[str, Any]]:
-    df = reading_xlsx(path)
+def df_to_transactions(lst: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Функция, которая возвращает список для дальнейших работ с ним."""
+    df = pd.DataFrame(lst)
     df_expanse = df[(df['Статус'] == 'OK') \
                     & (df['Сумма платежа'] <= 0) \
                     & (df['Валюта операции'] != 'RUB') \
