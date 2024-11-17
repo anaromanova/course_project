@@ -5,6 +5,9 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 from typing import Any
+import io
+
+from win32ctypes.pywin32.pywintypes import datetime
 
 logger = logging.getLogger(__name__)
 file_handler = logging.FileHandler('logs/utils.log', mode='w')

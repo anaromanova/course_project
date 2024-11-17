@@ -7,7 +7,7 @@ from datetime import datetime
 def changing_df(path: str, date:str) -> pd.DataFrame:
     """Функция, которая возвращает датафрейм для дальнейших работ с ним."""
     df = reading_xlsx(path=path)
-    date = pd.to_datetime(date)
+    date = pd.to_datetime(date, dayfirst=False)
     df = df[(df['Дата операции'] >= date.replace(day=1)) & (df['Дата операции'] <= date)]
     return df
 
@@ -99,4 +99,4 @@ def views(path:str, date:str) -> json:
             'top_transactions': top_transactions(path, date),
             'currency_rates': external_api_currency(),
             'stock_prices': external_api_marketstack()
-            })
+            }, ensure_ascii=False)

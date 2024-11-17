@@ -11,6 +11,6 @@ def investment_bank(month: str, transactions: list[dict[str, Any]], limit: int)-
     num = 0
     transactions = df_to_transactions(transactions)
     for i in transactions:
-        if str(pd.to_datetime(i['Дата операции']).strftime('%Y-%m')) < month:
+        if pd.to_datetime(i['Дата операции']) < pd.to_datetime(month, format='%Y-%m'):
             num += math.ceil(abs(i['Сумма операции']) / limit) * limit - abs(i['Сумма операции'])
     return num
