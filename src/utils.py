@@ -119,3 +119,6 @@ def external_api_currency() -> list[dict]:
         return lst
     except requests.exceptions.RequestException:
         logger.warning('Возможна проблема с подключением через API к сайту с курсом валют')
+
+
+print(external_api_currency())
