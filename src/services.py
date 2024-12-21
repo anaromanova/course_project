@@ -1,10 +1,12 @@
-from typing import Any
-from src.utils import df_to_transactions
-import pandas as pd
 import math
+from typing import Any
+
+import pandas as pd
+
+from src.utils import df_to_transactions
 
 
-def investment_bank(month: str, transactions: list[dict[str, Any]], limit: int)-> float:
+def investment_bank(month: str, transactions: list[dict[str, Any]], limit: int) -> float:
     """Функция, которая позволяет задавать комфортный порог округления: 10, 50 или 100 ₽.
      Траты будут округляться, и разница между фактической суммой трат по карте
       и суммой округления будет попадать на счет «Инвесткопилки»."""

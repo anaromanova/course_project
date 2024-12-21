@@ -1,20 +1,20 @@
-from src.views import views
+from src.reports import spending_by_category
 from src.services import investment_bank
 from src.utils import reading_xlsx
-from src.reports import spending_by_category
+from src.views import views
 
 
 def views_option() -> None:
     """Функция, которая выдает список транзакций по выбранной дате."""
     print('''Программа: Привет! Добро пожаловать в программу работы с банковскими транзакциями.
-Пропишите дату по которую хотите видеть данные о картах и затратах по ним и топ-5 транзакций по сумме платежа 
+Пропишите дату по которую хотите видеть данные о картах и затратах по ним и топ-5 транзакций по сумме платежа
 в формате YYYY-MM-DD HH:MM:SS''')
     date_answer = input('Пользователь: ')
     print(f'Программа: Для обработки выбран {date_answer}.')
     try:
         print(views('data/operations.xlsx', date_answer))
     except KeyError:
-        print(f'Программа: возможно вы написали дату не в том формате.')
+        print('Программа: возможно вы написали дату не в том формате.')
 
 
 def services_option() -> None:
@@ -29,9 +29,10 @@ def services_option() -> None:
         print('''Программа: Введите комфортный порог округления: 10, 50 или 100 ₽''')
         limit_answer = input('Пользователь: ')
     try:
-        print(f'Программа: Удалось бы сохранить {investment_bank(month_answer, reading_xlsx('data/operations.xlsx').to_dict('records'), int(limit_answer))}')
+        print(f'Программа: Удалось бы сохранить {investment_bank(month_answer,
+                                                 reading_xlsx('data/operations.xlsx').to_dict('records'), int(limit_answer))}')
     except ValueError:
-        print(f'Программа: Возможно вы написали дату не в том формате или порог округления не тот')
+        print('Программа: Возможно вы написали дату не в том формате или порог округления не тот')
 
 
 def reports_option() -> None:
@@ -39,15 +40,15 @@ def reports_option() -> None:
     print('''Программа: Теперь напишите категорию, по которой хотите посмотреть траты.''')
     category_answer = input('Пользователь: ')
     print(f'Программа: Для обработки выбрана категория: {category_answer}.')
-    print('''Программа: Также напишите дату, по которую мы будем смотреть траты(в целом за 3 месяца) в формате DD-MM-YYYY.
-Если ничего не введете, то траты будут отображены по текущую дату''')
+    print('''Программа: Также напишите дату, по которую мы будем смотреть траты(в целом
+     за 3 месяца) в формате DD-MM-YYYY. Если ничего не введете, то траты будут отображены по текущую дату''')
     end_date_answer = input('Пользователь: ')
     if end_date_answer != '':
         print(f'Программа: Для обработки выбран: {end_date_answer}.')
         try:
             print(spending_by_category(reading_xlsx('data/operations.xlsx'), category_answer, end_date_answer))
         except KeyError:
-            print(f'Программа: возможно вы написали дату не в том формате.')
+            print('Программа: возможно вы написали дату не в том формате.')
     else:
         print(spending_by_category(reading_xlsx('data/operations.xlsx'), category_answer))
 
@@ -59,3 +60,5 @@ def main() -> None:
     services_option()
     reports_option()
 
+
+main()
