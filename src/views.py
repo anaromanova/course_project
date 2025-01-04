@@ -49,7 +49,7 @@ def each_card(path: str, date: str) -> list[dict]:
         return df.to_dict('records')
 
 
-def top_transactions(path, date) -> list[dict]:
+def top_transactions(path: str, date: str) -> list[dict]:
     """Функция, которая возвращает список словарей с Топ-5 транзакций по сумме платежа."""
     df = changing_df(path=path, date=date)
     if len(df) == 0:

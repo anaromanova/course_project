@@ -29,8 +29,9 @@ def services_option() -> None:
         print('''Программа: Введите комфортный порог округления: 10, 50 или 100 ₽''')
         limit_answer = input('Пользователь: ')
     try:
-        print(f'Программа: Удалось бы сохранить {investment_bank(month_answer,
-                                                 reading_xlsx('data/operations.xlsx').to_dict('records'), int(limit_answer))}')
+        print('Программа: Удалось бы сохранить '
+              f'{investment_bank(month_answer,
+                 reading_xlsx('data/operations.xlsx').to_dict('records'), int(limit_answer))}')
     except ValueError:
         print('Программа: Возможно вы написали дату не в том формате или порог округления не тот')
 
