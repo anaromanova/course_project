@@ -3,8 +3,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from src.utils import (external_api_currency, external_api_marketstack,
-                       reading_xlsx)
+from src.utils import external_api_currency, external_api_marketstack, reading_xlsx
 
 
 def changing_df(path: str, date: str) -> pd.DataFrame:
